@@ -1,6 +1,7 @@
 import logging
 import os
 import pandas as pd
+import platform
 
 import config
 
@@ -40,7 +41,13 @@ def get_ip_by_number(number):
 
 
 def ping_ip(ip):
-    response = os.system("ping -c 1 " + ip)
+    response = 0
+
+    if platform.system() == 'Windows':
+        response = os.system("ping -n 1 " + ip)
+    else:
+        response = os.system("ping -c 1 " + ip)
+
     if response == 0:
         return True
     else:
