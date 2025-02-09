@@ -31,7 +31,6 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         result = ping_ip(ip)
         if (result):
-
             await send_result(update, context, "Симкарта доступна ✅")
         else:
             await send_result(update, context, "Симкарта недоступна ❌")
