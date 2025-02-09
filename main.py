@@ -31,10 +31,18 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         result = ping_ip(ip)
         if (result):
-            await context.bot.send_message(chat_id=update.effective_chat.id, text="Симкарта доступна ✅")
-        else:
-            await context.bot.send_message(chat_id=update.effective_chat.id, text="Симкарта недоступна ❌")
 
+            await send_result(update, context, "Симкарта доступна ✅")
+        else:
+            await send_result(update, context, "Симкарта недоступна ❌")
+
+
+def send_result(update: Update, context: ContextTypes.DEFAULT_TYPE, resultText):
+    try:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=resultText)
+    except Exception as e:
+        print("Retry send message")
+        context.bot.send_message(chat_id=update.effective_chat.id, text=resultText)
 
 def get_ip_by_number(number):
     return iccid_ip_map.get(number)
