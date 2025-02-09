@@ -17,23 +17,32 @@ logging.basicConfig(
 
 iccid_ip_map = {}
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # TODO добавить более подробную инструкцию
-    await context.bot.send_message(chat_id=update.effective_chat.id,
-                                   text="Бот для проверки доступности сим карты. Для начала работы отправьте номер телефона для проверки")
+    if update.effective_user.id in config.users:
+        await context.bot.send_message(chat_id=update.effective_chat.id,
+                                       text="Бот для проверки доступности сим карты.\n\n"
+                                            "Для проверки сим карты отправьте номер указанный на боковой части карты рядом со штрих кодом. Номер не должен содержать пробелов. "
+                                            "Только цифры отправленные подряд. \n\n Для карты на картинке корректный запрос на проверку номера будет следующий: 89701201469007113583\n"
+                                            "\n Возможные ответы:\n 1. Симкарта доступна ✅\n2. Симкарта недоступна ❌\n3. Указан неверный номер\n\n"
+                                            "В случае если ответ не получен, повторите запрос повторно. Если симкарта не доступна, возможно она установлена не корректно. Повторите запрос после того как карта будет установлена корректно")
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=open('intro.jpeg', 'rb'))
+    else:
+        await context.bot.send_message(chat_id=update.effective_chat.id,
+                                       text="Вы не можете использовать бота. Обратитесь к администратору.")
+
 
 
 async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ip = get_ip_by_number(update.message.text)
 
     if ip is None:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="Неверный номер. Повторите снова")
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="Указан нверный номер. Повторите снова")
         return
     else:
         result = ping_ip(ip)
         if (result):
-            await send_result(update, context, "Симкарта доступна ✅")
+            await send_result(update, context, "Симкарта " + update.message.text + "доступна ✅")
         else:
-            await send_result(update, context, "Симкарта недоступна ❌")
+            await send_result(update, context, "Симкарта " + update.message.text + "недоступна ❌")
 
 
 async def send_result(update: Update, context: ContextTypes.DEFAULT_TYPE, resultText):
