@@ -36,12 +36,12 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await send_result(update, context, "Симкарта недоступна ❌")
 
 
-def send_result(update: Update, context: ContextTypes.DEFAULT_TYPE, resultText):
+async def send_result(update: Update, context: ContextTypes.DEFAULT_TYPE, resultText):
     try:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=resultText)
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=resultText)
     except Exception as e:
         print("Retry send message")
-        context.bot.send_message(chat_id=update.effective_chat.id, text=resultText)
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=resultText)
 
 def get_ip_by_number(number):
     return iccid_ip_map.get(number)
@@ -86,4 +86,8 @@ if __name__ == '__main__':
     textHandler = MessageHandler(filters.Chat(config.users), text_handler)
     application.add_handler(textHandler)
 
-    application.run_polling()
+    try:
+        application.run_polling()
+    except Exception as e:
+        print("Trying to start one more time")
+        application.run_polling()
