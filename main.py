@@ -95,9 +95,7 @@ def parse_excel(file_path):
 
 @Gooey
 def main():
-
-
-if __name__ == '__main__':
+    print("Hello")
 
     iccid_ip_map = parse_excel('settings/iccid_ip.xlsx')
 
