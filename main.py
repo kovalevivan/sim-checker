@@ -4,7 +4,6 @@ import pandas as pd
 import platform
 
 
-from gooey import Gooey
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, ContextTypes, CommandHandler
 
@@ -20,7 +19,7 @@ users = []
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if users == [] or update.effective_user.id in users:
+    if users == [] or str(update.effective_user.id) in users:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Бот для проверки доступности SIM.\n\n"
                                             "Для проверки отправьте крайние 6 цифр SIM до последней цифры. "
@@ -93,11 +92,23 @@ def parse_excel(file_path):
 
     return iccid_ip_map
 
-@Gooey
-def main():
-    print("Hello")
+
+def parse_chat_ids(file_path):
+    # Read the Excel file
+    df = pd.read_excel(file_path, dtype=str)
+
+    # Ensure the required column exists
+    if 'Чат ID' not in df.columns:
+        raise ValueError("Missing required column: Чат ID")
+
+    # Return the list of chat IDs
+    return df['Чат ID'].tolist()
+
+
+if __name__ == '__main__':
 
     iccid_ip_map = parse_excel('settings/iccid_ip.xlsx')
+    users = parse_chat_ids('settings/users.xlsx')
 
     application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
