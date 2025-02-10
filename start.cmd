@@ -4,7 +4,7 @@
 :: call venv\Scripts\activate
 
 :: Run the Python script
-python sim-checker.py
+python main.py
 
 :: Keep the window open after execution
 echo.
