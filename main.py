@@ -21,11 +21,11 @@ iccid_ip_map = {}
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id in config.users:
         await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text="Бот для проверки доступности сим карты.\n\n"
-                                            "Для проверки сим карты отправьте номер указанный на боковой части карты рядом со штрих кодом. Номер не должен содержать пробелов. "
-                                            "Только цифры отправленные подряд. \n\n Для карты на картинке корректный запрос на проверку номера будет следующий: 89701201469007113583\n"
-                                            "\n Возможные ответы:\n 1. Симкарта доступна ✅\n2. Симкарта недоступна ❌\n3. Указан неверный номер\n\n"
-                                            "В случае если ответ не получен, повторите запрос повторно. Если симкарта не доступна, возможно она установлена не корректно. Повторите запрос после того как карта будет установлена корректно")
+                                       text="Бот для проверки доступности SIM.\n\n"
+                                            "Для проверки отправьте крайние 6 цифр SIM до последней цифры. "
+                                            "\n\n Для карты на картинке корректный запрос на проверку номера будет следующий: 711358\n"
+                                            "\n Возможные ответы:\n 1. SIM доступна ✅\n2. SIM недоступна ❌\n3. SIM не найдена\n\n"
+                                            "В случае если ответ не получен, повторите запрос.")
         await context.bot.send_photo(chat_id=update.effective_chat.id, photo=open('intro.jpeg', 'rb'))
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id,
@@ -36,14 +36,14 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ip = get_ip_by_number(update.message.text)
 
     if ip is None:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="Указан нверный номер. Повторите снова")
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="SIM №" + update.message.text + " не найдена, проверьте правильность отправляемого № SIM((Указываем крайние 6 цифр до последней цифры)")
         return
     else:
         result = ping_ip(ip)
         if (result):
-            await send_result(update, context, "Симкарта " + update.message.text + " доступна ✅")
+            await send_result(update, context, "SIM №" + update.message.text + " доступна ✅")
         else:
-            await send_result(update, context, "Симкарта " + update.message.text + " недоступна ❌")
+            await send_result(update, context, "SIM №" + update.message.text + " недоступна ❌")
 
 
 async def send_result(update: Update, context: ContextTypes.DEFAULT_TYPE, resultText):
@@ -87,10 +87,9 @@ def parse_excel(file_path):
         raise ValueError("Missing required columns: ICCID and IP")
 
     # Create a dictionary mapping ICCID to IP
-    iccid_ip_map = dict(zip(df['ICCID'], df['IP']))
+    iccid_ip_map = dict(zip(df['ICCID'][14:20], df['IP']))
 
     return iccid_ip_map
-
 
 if __name__ == '__main__':
 
