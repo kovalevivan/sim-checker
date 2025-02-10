@@ -5,3 +5,8 @@
 
 :: Run the Python script
 python sim-checker.py
+
+:: Keep the window open after execution
+echo.
+echo Press any key to exit...
+pause > nul
