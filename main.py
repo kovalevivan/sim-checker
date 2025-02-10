@@ -59,7 +59,7 @@ def get_ip_by_number(number):
 
 
 def ping_ip(ip):
-    for i in range(3):
+    for i in range(4):
         if try_ping_ip(ip):
             return True
     return False
