@@ -3,8 +3,8 @@ import os
 import pandas as pd
 import platform
 
-import config
 
+from gooey import Gooey
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, ContextTypes, CommandHandler
 
@@ -16,10 +16,11 @@ logging.basicConfig(
 )
 
 iccid_ip_map = {}
+users = []
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.id in config.users:
+    if users == [] or update.effective_user.id in users:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Бот для проверки доступности SIM.\n\n"
                                             "Для проверки отправьте крайние 6 цифр SIM до последней цифры. "
@@ -36,7 +37,8 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ip = get_ip_by_number(update.message.text)
 
     if ip is None:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="SIM №" + update.message.text + " не найдена, проверьте правильность отправляемого № SIM((Указываем крайние 6 цифр до последней цифры)")
+        await context.bot.send_message(chat_id=update.effective_chat.id,
+                                       text="SIM №" + update.message.text + " не найдена, проверьте правильность отправляемого № SIM((Указываем крайние 6 цифр до последней цифры)")
         return
     else:
         result = ping_ip(ip)
@@ -91,9 +93,13 @@ def parse_excel(file_path):
 
     return iccid_ip_map
 
+@Gooey
+def main():
+
+
 if __name__ == '__main__':
 
-    iccid_ip_map = parse_excel('iccid_ip.xlsx')
+    iccid_ip_map = parse_excel('settings/iccid_ip.xlsx')
 
     application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
