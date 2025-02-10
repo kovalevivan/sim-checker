@@ -55,6 +55,11 @@ async def send_result(update: Update, context: ContextTypes.DEFAULT_TYPE, result
 def get_ip_by_number(number):
     return iccid_ip_map.get(number)
 
+def ping_ip(ip):
+    for i in range(3):
+        if(ping_ip(ip)):
+            return True
+    return False
 
 def ping_ip(ip):
     response = 0
