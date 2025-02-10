@@ -16,6 +16,8 @@ logging.basicConfig(
 )
 
 iccid_ip_map = {}
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id in config.users:
         await context.bot.send_message(chat_id=update.effective_chat.id,
@@ -28,7 +30,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Вы не можете использовать бота. Обратитесь к администратору.")
-
 
 
 async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -52,18 +53,20 @@ async def send_result(update: Update, context: ContextTypes.DEFAULT_TYPE, result
         print("Retry send message")
         await context.bot.send_message(chat_id=update.effective_chat.id, text=resultText)
 
+
 def get_ip_by_number(number):
     return iccid_ip_map.get(number)
 
+
 def ping_ip(ip):
     for i in range(3):
-        if(ping_ip(ip)):
+        if try_ping_ip(ip):
             return True
     return False
 
-def ping_ip(ip):
-    response = 0
 
+def try_ping_ip(ip):
+    response = 0
     if platform.system() == 'Windows':
         response = os.system("ping -n 1 " + ip)
     else:
@@ -73,6 +76,7 @@ def ping_ip(ip):
         return True
     else:
         return False
+
 
 def parse_excel(file_path):
     # Read the Excel file
