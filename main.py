@@ -23,8 +23,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text="Бот для проверки доступности SIM.\n\n"
                                             "Для проверки отправьте крайние 6 цифр SIM до последней цифры. "
-                                            "\n\n Для карты на картинке корректный запрос на проверку номера будет следующий: 711358\n"
-                                            "\n Возможные ответы:\n 1. SIM доступна ✅\n2. SIM недоступна ❌\n3. SIM не найдена\n\n"
+                                            "\n\nДля карты на картинке корректный запрос на проверку номера будет следующий: 711358\n"
+                                            "\n Возможные ответы:\n1. SIM доступна ✅\n2. SIM недоступна ❌\n3. SIM не найдена\n\n"
                                             "В случае если ответ не получен, повторите запрос.")
         await context.bot.send_photo(chat_id=update.effective_chat.id, photo=open('intro.jpeg', 'rb'))
     else:
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     start_handler = CommandHandler('start', start)
     application.add_handler(start_handler)
 
-    textHandler = MessageHandler(filters.Chat(config.users), text_handler)
+    textHandler = MessageHandler(text_handler)
     application.add_handler(textHandler)
 
     try:
