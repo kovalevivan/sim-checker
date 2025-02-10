@@ -100,7 +100,7 @@ if __name__ == '__main__':
     start_handler = CommandHandler('start', start)
     application.add_handler(start_handler)
 
-    textHandler = MessageHandler(text_handler)
+    textHandler = MessageHandler(filters.TEXT, text_handler)
     application.add_handler(textHandler)
 
     try:
