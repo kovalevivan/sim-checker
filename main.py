@@ -87,7 +87,7 @@ def parse_excel(file_path):
         raise ValueError("Missing required columns: ICCID and IP")
 
     # Create a dictionary mapping ICCID to IP
-    iccid_ip_map = dict(zip(df['ICCID'][13:19], df['IP']))
+    iccid_ip_map = {iccid[-7:-1]: ip for iccid, ip in zip(df['ICCID'], df['IP'])}
 
     return iccid_ip_map
 
