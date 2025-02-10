@@ -107,8 +107,8 @@ def parse_chat_ids(file_path):
 
 if __name__ == '__main__':
 
-    iccid_ip_map = parse_excel('settings/iccid_ip.xlsx')
-    users = parse_chat_ids('settings/users.xlsx')
+    iccid_ip_map = parse_excel('settings/iccid_ip.xls')
+    users = parse_chat_ids('settings/users.xls')
 
     application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
