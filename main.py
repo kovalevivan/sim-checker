@@ -118,8 +118,4 @@ if __name__ == '__main__':
     textHandler = MessageHandler(filters.TEXT, text_handler)
     application.add_handler(textHandler)
 
-    try:
-        application.run_polling()
-    except Exception as e:
-        print("Trying to start one more time")
-        application.run_polling()
+    application.run_polling()
