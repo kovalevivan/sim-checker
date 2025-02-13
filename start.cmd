@@ -4,6 +4,7 @@
 :: call venv\Scripts\activate
 
 :: Run the Python script
+cd C:\Users\Engeneer-7\sim-checker
 python main.py
 
 :: Keep the window open after execution
